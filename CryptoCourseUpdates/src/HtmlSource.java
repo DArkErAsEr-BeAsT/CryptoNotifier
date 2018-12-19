@@ -1,7 +1,6 @@
 import java.util.*;
 
 import java.io.*;
-
 import org.jsoup.Jsoup;
 
 public class HtmlSource {
