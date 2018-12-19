@@ -1,4 +1,5 @@
 import java.util.*;
+
 import java.io.*;
 
 import org.jsoup.Jsoup;
@@ -38,7 +39,7 @@ public class HtmlSource {
         	String line = input.nextLine();
         	if(line.contains("<td data-title=\"Cours\" class=\"jsx-1338272632\"><span class=\"\">")) {
         		line = line.replaceAll("               <td data-title=\"Cours\" class=\"jsx-1338272632\"><span class=\"\">", "");
-        		line = line.replaceAll(" €</span></td>", "");
+        		line = line.replaceAll(" ï¿½</span></td>", "");
         		currencyOutput.println(line);
         		counterCours++;
         	} else if (line.contains("<td data-title=\"Crypto-monnaie\" class=\"jsx-1338272632\"><span class=\"jsx-1338272632\"><img style=\"width:20px;margin-right:12px\"")) {
@@ -49,7 +50,8 @@ public class HtmlSource {
         		currencyOutput.println(line);
         	}
         }
-        
+        fileOutput.close();
+        currencyOutput.close();
         input.close();
     }
 }

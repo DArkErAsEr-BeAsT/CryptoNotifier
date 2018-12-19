@@ -1,10 +1,14 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Date;
 
 import java.util.Timer;
 import java.util.Properties;
 import java.util.TimerTask;
 
-import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -14,7 +18,25 @@ import javax.mail.internet.MimeMessage;
 
 
 public class Main extends Object{
-	public static void sendMail() {
+	public static void sendMail() throws IOException {
+		String everything = null;
+		BufferedReader br = new BufferedReader(new FileReader("topCurrencies.txt"));
+		try {
+		    StringBuilder sb = new StringBuilder();
+		    String line = br.readLine();
+
+		    while (line != null) {
+		        sb.append(line);
+		        sb.append(System.lineSeparator());
+		        line = br.readLine();
+		    }
+		    everything = sb.toString();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+		    br.close();
+		}
 		  try{
 
 		        Properties props = new Properties();
@@ -42,11 +64,11 @@ public class Main extends Object{
 		        msg.setFrom( new InternetAddress( "dcolonna12.dc@gmail.com" ) );
 		        msg.setRecipients( Message.RecipientType.TO,InternetAddress.parse("colonna.david0@gmail.com") );
 		         msg.addRecipient(Message.RecipientType.TO, new InternetAddress("combremontantoine@gmail.com"));;
-		         msg.setContent("<h1>This is actual message</h1>", "text/html");;
+		         msg.setContent(everything, "text/html");;
 
 		        msg.setSentDate( new Date());
 		        msg.setSubject( "Hello World!" );
-		        msg.setText(message);;
+		        msg.setText(everything);;
 
 
 		        Transport.send( msg );
@@ -61,11 +83,34 @@ public class Main extends Object{
 
 
 public static void main(String [] args) {
+	Timer timer1 = new Timer ();
+	( timer1).scheduleAtFixedRate(new TimerTask() {
+		@Override
+		  public void run() {
+	try {
+		HtmlSource.main(args);;
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}	  }
+		},0, 10*60*10000);
+	
 Timer timer = new Timer ();
 ( timer).scheduleAtFixedRate(new TimerTask() {
 	@Override
 	  public void run() {
-sendMail();	  }
-	},0, 10*60*10000);
+try {
+	sendMail();
+} catch (FileNotFoundException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+} catch (IOException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}	  }
+	},10*60*10, 10*60*10000);
 }
 }
